@@ -4,22 +4,27 @@ let frictionAcc = 400;
 let terminalVel = 200;
 //Note: all speeds are pixels per second
 document.addEventListener("DOMContentLoaded", () => {
-    let reducers = (state = {pos: {x: 320, y: 240}, vel: {x: 0, y: 0}, acc: {x: 0, y: 0}}, action) => {
+    let reducers = (state = {pos: {x: 320, y: 240}, vel: {x: 0, y: 0}, acc: {x: 0, y: 0}, fps: 0}, action) => {
         switch(action.type) {
             case 'handle_events':
-                //console.log('keypressed: ', action.keyPressed);
-                switch(action.keyPressed) {
-                    case 37: //left (clockwise)
-                        return {...state, acc: {x: -800, y: 0}};
-                    case 38:
-                        return {...state, acc: {x: 0, y: -800}};
-                    case 39:
-                        return {...state, acc: {x: 800, y: 0}};
-                    case 40:
-                        return {...state, acc: {x: 0, y: 800}};
-                    default:
-                        return {...state, acc: {x: 0, y: 0}};
-                };
+                //console.log('keypressed: ', action.keysPressed);
+                let newAcc = {...state.acc};
+                //TODO: write cleaner shorter code for this.
+                if(action.keysPressed[37] && !action.keysPressed[39])
+                    newAcc.x = -800;
+                else if(action.keysPressed[39] && !action.keysPressed[37])
+                    newAcc.x = 800;
+                else
+                    newAcc.x = 0;
+
+                if(action.keysPressed[38] && !action.keysPressed[40])
+                    newAcc.y = -800;
+                else if(action.keysPressed[40] && !action.keysPressed[38])
+                    newAcc.y = 800;
+                else
+                    newAcc.y = 0;
+
+                return {...state, acc: newAcc};
             case 'physics':
                 return {
                     ...state,
@@ -76,9 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastTime = Date.now();
     const fps = 120;
 
-    let keyPressed;
-    canvas.addEventListener('keydown', (e) => keyPressed = e.which);
-    canvas.addEventListener('keyup', (e) => {if(keyPressed == e.which) keyPressed = false;});
+    let keysPressed = {};
+    canvas.addEventListener('keydown', (e) => keysPressed[e.which] = true);
+    canvas.addEventListener('keyup', (e) => keysPressed[e.which] = false);
 
     let gameLoop = setInterval(() => {
         let ctx = canvas.getContext('2d');
@@ -91,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000 / fps);
 
     const update = (dt) => {
-        store.dispatch({ type: 'handle_events', dt, keyPressed });
+        store.dispatch({ type: 'handle_events', dt, keysPressed });
         store.dispatch({ type: 'physics', dt });
         store.dispatch({ type: 'fps', dt });
     };
