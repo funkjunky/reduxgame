@@ -4,7 +4,7 @@ let frictionAcc = 400;
 let terminalVel = 200;
 //Note: all speeds are pixels per second
 document.addEventListener("DOMContentLoaded", () => {
-    let reducers = (state = {pos: {x: 320, y: 240}, vel: {x: 0, y: 0}, acc: {x: 0, y: 0}, fps: 0}, action) => {
+    let reducers = (state = {pos: {x: 320, y: 240}, vel: {x: 0, y: 0}, acc: {x: 0, y: 0}, fpsCount: 0}, action) => {
         switch(action.type) {
             case 'handle_events':
                 //console.log('keypressed: ', action.keysPressed);
@@ -25,14 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     newAcc.y = 0;
 
                 return {...state, acc: newAcc};
-            case 'physics':
+            case 'tick':
                 return {
                     ...state,
                     vel: vel(state.vel, {...action, acc: state.acc}), //TODO: try and shorthand this better
                     pos: pos(state.pos, {...action, vel: state.vel}),
+                    fpsCount: fpsCount(state, action),
                 };
-            case 'fps':
-                return { ...state, fpsCount: fpsCount(state, action) };
             default:
                 return state;
         }
@@ -72,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         y: state.y + action.vel.y * (action.dt / 1000)
     });
 
+    //TODO: think of a stateless way to calculate FPS smoothly. Per frame simply isn't accurate enough.
     const fpsCount = (state, action) => 1000 / action.dt;
 
     let store = createStore(reducers, window.devToolsExtension && window.devToolsExtension());
@@ -97,8 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const update = (dt) => {
         store.dispatch({ type: 'handle_events', dt, keysPressed });
-        store.dispatch({ type: 'physics', dt });
-        store.dispatch({ type: 'fps', dt });
+        store.dispatch({ type: 'tick', dt });
     };
 
     const draw = (ctx) => {
