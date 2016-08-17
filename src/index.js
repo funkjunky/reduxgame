@@ -1,34 +1,80 @@
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 
+let frictionAcc = 400;
+let terminalVel = 200;
+//Note: all speeds are pixels per second
 document.addEventListener("DOMContentLoaded", () => {
-    let reducers = (state = {pos: {x: 320, y: 240}}, action) => {
+    let reducers = (state = {pos: {x: 320, y: 240}, vel: {x: 0, y: 0}, acc: {x: 0, y: 0}}, action) => {
         switch(action.type) {
             case 'handle_events':
+                //console.log('keypressed: ', action.keyPressed);
                 switch(action.keyPressed) {
                     case 37: //left (clockwise)
-                        return {...state, pos: {x: state.pos.x - 1, y: state.pos.y}};   //TODO: replace 1 with dt / player.speed
+                        return {...state, acc: {x: -800, y: 0}};
                     case 38:
-                        return {...state, pos: {x: state.pos.x, y: state.pos.y - 1}};
+                        return {...state, acc: {x: 0, y: -800}};
                     case 39:
-                        return {...state, pos: {x: state.pos.x + 1, y: state.pos.y}};
+                        return {...state, acc: {x: 800, y: 0}};
                     case 40:
-                        return {...state, pos: {x: state.pos.x, y: state.pos.y + 1}};
+                        return {...state, acc: {x: 0, y: 800}};
                     default:
-                        return state;
-                }
-            case 'tick':
-                return state;
+                        return {...state, acc: {x: 0, y: 0}};
+                };
+            case 'physics':
+                return {
+                    ...state,
+                    vel: vel(state.vel, {...action, acc: state.acc}), //TODO: try and shorthand this better
+                    pos: pos(state.pos, {...action, vel: state.vel}),
+                };
+            case 'fps':
+                return { ...state, fpsCount: fpsCount(state, action) };
             default:
                 return state;
         }
     };
 
-    let store = createStore(reducers);
+    const absSub = (a, b) => {
+        if(a < 0)
+            return Math.min(a + b, 0);
+        else
+            return Math.max(a - b, 0);
+    };
+
+    const derivative = (state, action) => ({
+            x: state.x + action.acc.x * (action.dt / 1000),
+            y: state.y + action.acc.y * (action.dt / 1000)
+    });
+    //additional vel reducers
+    const friction = (state, action) => ({
+        x: absSub(state.x, frictionAcc * (action.dt / 1000)),
+        y: absSub(state.y, frictionAcc * (action.dt / 1000))
+    });
+    const terminalVelocity = (state, action) => {
+        let magnitude = Math.sqrt(state.x * state.x + state.y * state.y);  
+
+        if(magnitude === 0)
+            return state;
+
+        let normalized = {x: state.x / magnitude, y: state.y / magnitude};
+        magnitude = Math.min(terminalVel, magnitude);
+
+        return {x: normalized.x * magnitude, y: normalized.y * magnitude};
+    };
+    const vel = (state, action) => [derivative, friction, terminalVelocity].reduce((state, reducer) => reducer(state, action), state);
+
+    const pos = (state, action) => ({
+        x: state.x + action.vel.x * (action.dt / 1000),
+        y: state.y + action.vel.y * (action.dt / 1000)
+    });
+
+    const fpsCount = (state, action) => 1000 / action.dt;
+
+    let store = createStore(reducers, window.devToolsExtension && window.devToolsExtension());
 
     const canvas = document.querySelector('canvas');
 
     let lastTime = Date.now();
-    const fps = 60;
+    const fps = 120;
 
     let keyPressed;
     canvas.addEventListener('keydown', (e) => keyPressed = e.which);
@@ -46,7 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const update = (dt) => {
         store.dispatch({ type: 'handle_events', dt, keyPressed });
-        store.dispatch({ type: 'tick', dt });
+        store.dispatch({ type: 'physics', dt });
+        store.dispatch({ type: 'fps', dt });
     };
 
     const draw = (ctx) => {
