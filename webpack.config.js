@@ -8,6 +8,7 @@ var DATA_DIR = path.resolve(__dirname, 'json');
 module.exports = {
     devtool: '#eval-source-map',
     entry: [
+        'babel-polyfill',
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
 

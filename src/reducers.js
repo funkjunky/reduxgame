@@ -1,16 +1,15 @@
-import acceleration from './reducers/physics/acceleration.js';
-import velocity from './reducers/physics/velocity.js';
-import position from './reducers/physics/position.js';
-
 import { combineReducers } from 'redux';
 
+import input from './reducers/input.js';
+import entities from './reducers/entities.js';
 import fps from './reducers/fps.js';
+import ups from './reducers/ups.js';
 
 //TODO: This doesn't work, because we want the value of acceleration to be used in velocity.
 const reducers = combineReducers({
-    acceleration,
-    velocity,
-    position,
+    input,
+    entities,
+    ups,
     fps,
 });
 

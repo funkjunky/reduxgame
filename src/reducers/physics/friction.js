@@ -6,10 +6,10 @@ const absSub = (a, b) => {
 };
 
 //TODO: put frictionAcc into a const
-let frictionAcc = 400;
-const friction = (state, action) => ({
-    x: absSub(state.x, frictionAcc * (action.dt / 1000)),
-    y: absSub(state.y, frictionAcc * (action.dt / 1000))
+let frictionAcc = 200;
+const friction = (state, {dt = 0}) => ({
+    x: absSub(state.x, frictionAcc * (dt / 1000)),
+    y: absSub(state.y, frictionAcc * (dt / 1000))
 });
 
 export default friction;

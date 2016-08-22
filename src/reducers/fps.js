@@ -1,4 +1,9 @@
-//TODO: think of a stateless way to calculate FPS smoothly. Per frame simply isn't accurate enough.
-const fps = (state = 0, action) => 1000 / action.dt;
+import addFrame from '../helpers/addframe.js';
+
+//Frames per cycle
+const fps = (state = {updates: 0, elapsed: 0, speed: 0}, action) => 
+    (action.type === 'add_frame')
+        ? addFrame(state, action)
+        : state;
 
 export default fps;
