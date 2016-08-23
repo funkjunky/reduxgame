@@ -1,12 +1,11 @@
-const inputs = (state = {}, action) => {
-    switch(action.type) {
-        case 'keydown':
-            return { ...state, [action.which]: true };
-        case 'keyup':
-            return { ...state, [action.which]: false };
-        default:
-            return state;
-    }
-};
+import { combineReducers } from 'redux';
 
-export default inputs;
+import keys from './keys.js';
+import mouse from './mouse.js';
+
+const input = combineReducers({
+    keys,
+    mouse,
+});
+
+export default input;

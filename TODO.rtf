@@ -1,0 +1,34 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 game todo:\
+\'97\
+\
+ *- turn the ship into a polygon sorta like geometry wars [hex with square at front]\
+	*- origin centre\
+ *- add mouse for rotation of ship\
+	*- add rotation variables, but don\'92t put in drawing yet\
+	*- put rotate in drawing.\
+ - add shooting bullets with left mouse click [little circles]\
+	- bullets are entities\
+ - add generating random asteroids [polygons]\
+ - add collision with bullets and asteroids so they make smaller asteroids that will NOT split after being hit\
+ - add score to destroying asteroids\
+ - add collision with ship for asteroid, reset state except life, which i reduce by 1\
+\
+ - new gameplay\
+	- add a portal oval entity\
+	- bullets now freeze asteroid movement [bullets yellow]\
+	- when entering portal change state\
+		- ship is now blue\
+		- background is patches of varying grey [rectangles]\
+		- so asteroids can be destroyed\
+		- asteroids don\'92t destroy the ship [can still see white asteroids, but 70% alpha]\
+		- large walls start coming in at an ever increasing rate across the map [blue]\
+		- hold right click to phase back into the real world to avoid walls [walls 70% alpha]\
+			- also background normal while phasing back in. [and asteroids 100% alpha]\
+			- a rectangle inside the ship indicates how much phase is left [white]\
+			- when phase runs out, you are returned to the real world and the alternate world is reset.}

@@ -29,10 +29,10 @@ const exclusive = (obj, mapping) => {
 }
 
 //only apply controls if applyControls is true
-const movement = (state = {x: 0, y: 0}, {type, input = {}, applyControls = false} ) => (applyControls)
+const movement = (state = {x: 0, y: 0}, {input = {}, applyControls = false} ) => (applyControls)
     ? {
         ...state,
-        ...exclusives(input, [{37: {x: -1200}, 39: {x:1200}, '_def': {x: 0}}, {38: {y:-1200}, 40: {y:1200}, '_def': {y: 0}}])
+        ...exclusives(input.keys, [{37: {x: -1200}, 39: {x:1200}, '_def': {x: 0}}, {38: {y:-1200}, 40: {y:1200}, '_def': {y: 0}}])
     }
     : state;
 

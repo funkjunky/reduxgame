@@ -1,5 +1,6 @@
 import { createStore, combineReducers } from 'redux';
 import reducers from './reducers.js';
+import drawPlayer from './helpers/drawplayer.js';
 
 //Note: all speeds are pixels per second
 document.addEventListener("DOMContentLoaded", () => {
@@ -29,9 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     canvas.addEventListener('keydown', ({which}) => (!store.getState().input[which]) ? store.dispatch({type: 'keydown', which}) : null);
     canvas.addEventListener('keyup', ({which}) => store.dispatch({type: 'keyup', which}));
+    canvas.addEventListener('mousemove', ({clientX, clientY}) => store.dispatch({type: 'mousemove', clientX, clientY}));
 
     const update = (dt) => {
         store.dispatch({ type: 'update_acceleration', dt, entity_id: 0, input: store.getState().input });
+        store.dispatch({ type: 'update_rotation', dt, entity_id: 0, input: store.getState().input });
         store.dispatch({ type: 'apply_velocity', dt });
         store.dispatch({ type: 'apply_friction', dt });
         store.dispatch({ type: 'apply_position', dt });
@@ -41,10 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //TODO: put into separate file
     const draw = (ctx) => {
         let state = store.getState();
-        ctx.beginPath();
-        ctx.moveTo(state.entities[0].position.x, state.entities[0].position.y);
-        ctx.lineTo(state.entities[0].position.x+25,state.entities[0].position.y+25);
-        ctx.lineTo(state.entities[0].position.x+25,state.entities[0].position.y-25);
-        ctx.fill();
+        drawPlayer(ctx, state.entities[0]);
     };
 });
