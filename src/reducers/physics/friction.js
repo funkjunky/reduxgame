@@ -5,8 +5,7 @@ const absSub = (a, b) => {
         return Math.max(a - b, 0);
 };
 
-//TODO: put frictionAcc into a const
-let frictionAcc = 200;
+const frictionAcc = 200;
 const friction = (state, {dt = 0}) => ({
     x: absSub(state.x, frictionAcc * (dt / 1000)),
     y: absSub(state.y, frictionAcc * (dt / 1000))

@@ -1,4 +1,3 @@
-//TODO: untested...
 const exclusives = (obj, mappings) => {
     return mappings.reduce((carry, mapping) => ({...carry, ...exclusive(obj, mapping)}), {});
 };

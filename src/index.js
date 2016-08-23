@@ -27,11 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
         draw(ctx);
     }, 1000 / fps);
 
-    //TODO: put into files as well.
     canvas.addEventListener('keydown', ({which}) => (!store.getState().input[which]) ? store.dispatch({type: 'keydown', which}) : null);
     canvas.addEventListener('keyup', ({which}) => store.dispatch({type: 'keyup', which}));
 
-    //TODO: put into separate file
     const update = (dt) => {
         store.dispatch({ type: 'update_acceleration', dt, entity_id: 0, input: store.getState().input });
         store.dispatch({ type: 'apply_velocity', dt });
