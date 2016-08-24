@@ -33,10 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.addEventListener('mousemove', ({clientX, clientY}) => store.dispatch({type: 'mousemove', clientX, clientY}));
 
     const update = (dt) => {
-        store.dispatch({ type: 'update_acceleration', dt, entity_id: 0, input: store.getState().input });
-        store.dispatch({ type: 'update_rotation', dt, entity_id: 0, input: store.getState().input });
-        store.dispatch({ type: 'apply_velocity', dt });
-        store.dispatch({ type: 'apply_friction', dt });
+        const state = store.getState();
+        store.dispatch({ type: 'update_acceleration', dt, entity_id: 0, input: state.input });
+        store.dispatch({ type: 'update_rotation', dt, entity_id: 0, input: state.input });
+        store.dispatch({ type: 'apply_friction', dt, friction: state.world.friction });
+        store.dispatch({ type: 'apply_velocity', dt, terminal: state.world.terminal });
         store.dispatch({ type: 'apply_position', dt });
         store.dispatch({ type: 'add_update', dt });
     };

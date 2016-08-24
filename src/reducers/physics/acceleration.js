@@ -32,7 +32,7 @@ const exclusive = (obj, mapping) => {
 const movement = (state = {x: 0, y: 0}, {input = {}, applyControls = false} ) => (applyControls)
     ? {
         ...state,
-        ...exclusives(input.keys, [{37: {x: -1200}, 39: {x:1200}, '_def': {x: 0}}, {38: {y:-1200}, 40: {y:1200}, '_def': {y: 0}}])
+        ...exclusives(input.keys, [{65: {x: -1200}, 68: {x:1200}, '_def': {x: 0}}, {87: {y:-1200}, 83: {y:1200}, '_def': {y: 0}}])
     }
     : state;
 

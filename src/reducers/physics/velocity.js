@@ -9,11 +9,11 @@ const derivative = (state, {dt = 0, acceleration = {x: 0, y: 0}}) => ({
 const velocity = (state={x:0, y:0}, action) => {
     switch(action.type) {
         case 'apply_velocity':
-            return terminal(derivative(state, action));
+            return terminal(derivative(state, action), action);
         case 'apply_friction':
-            return terminal(friction(state, action));
+            return friction(state, action);
         default:
-            return terminal(state);
+            return state;
     };
 };
 
