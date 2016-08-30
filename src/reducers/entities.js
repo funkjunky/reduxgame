@@ -13,7 +13,7 @@ const entities = (state=[], action) => {
             return [...state,  entityReducer(action.defaults, action)];
         //The following actions require additional info in their action based on the entity.
         case 'update_rotation':
-            return state.map((entity, index) => entityReducer(entity, {...action, applyRotation: action.entity_id === index, position: entity.position}));
+            return state.map((entity, index) => entityReducer(entity, {...action, applyRotation: action.entity_id === index, position: entity.position, rotationalVelocity: entity.rotationalVelocity}));
         case 'apply_friction':
             return state.map((entity, index) => entityReducer(entity, {...action, friction: (entity.friction !== false) ? entity.friction : action.friction})); //apply entity friction over world friction
         case 'update_acceleration':
@@ -34,6 +34,7 @@ const entityReducer = combineReducers({
     position,
     rotation,
     friction: (state = false) => state,
+    rotationalVelocity: (state = false) => state,
 });
 
 export default entities;

@@ -58,9 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     y: 20 + Math.random() * (480 - 20),
                 },
                 velocity: {
-                    x: 25 + Math.random() * 50,
-                    y: 25 + Math.random() * 50
+                    x: (Math.random() - 0.5) * 50,
+                    y: (Math.random() - 0.5) * 50
                 },
+                friction: 0,
+                rotationalVelocity: 0.001 * Math.random(),
             },
         });
     }, spawningInterval);
@@ -87,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const update = (dt) => {
         store.dispatch({ type: 'update_acceleration', dt, entity_id: 0, input: store.getState().input });
+        //TODO: update rotation is doing two things...
         store.dispatch({ type: 'update_rotation', dt, entity_id: 0, input: store.getState().input });
         store.dispatch({ type: 'apply_friction', dt, friction: store.getState().world.friction });
         store.dispatch({ type: 'apply_velocity', dt, terminal: store.getState().world.terminal });
