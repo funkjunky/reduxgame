@@ -1,16 +1,17 @@
 const width = 640;
 const height = 480;
+const padding = 20;
 
 const infiniteBox = ({x, y}) => ({
-    x: (x > width)
-        ? x - width 
-        : ((x < 0)
-            ? width + x
+    x: (x > width + padding)
+        ? x - (width + padding)
+        : ((x < -padding)
+            ? width + (x + padding)
             : x),
-    y: (y > width)
-        ? y - width 
-        : ((y < 0)
-            ? width + y
+    y: (y > height + padding)
+        ? y - (height + padding)
+        : ((y < -padding)
+            ? height + (y + padding)
             : y)
 });
 
