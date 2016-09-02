@@ -38,11 +38,15 @@
 	*- we draw from tags, first we see.\
 	*- for asteroids we pre-determine like 10 asteroids and index them. An asteroid gets a random tag \'91asteroid-shape-0\'92 to determine it\'92s shape of lines.	\
 \
- - make the code for creating asteroid_peice, 4 of them at the 4 squares around the area.\
- - add score to destroying asteroids\
- - add collision with ship for asteroid, reset state except life, which i reduce by 1\
-	- ALSO collision of bullet with ship! same idea!\
+ *- make the code for creating asteroid_peice, 4 of them at the 4 squares around the area.\
+ *- add score to destroying asteroids [1 point for big ones, 2 points for small ones]\
+ *- mouse is off, probably because of clientX/Y and the headers\
+ *- asteroid interval should use update and DT, so pause works with it\
+ *- add collision with ship for asteroid and bullet, reset all states, stop update interval, count down 5 seconds, start update interval\
+ *- grab ship for bullets through tags, not 0 index\
+ *- asteroid countdown should be in redux store\
 \
+ - put entity templates in their own files, in their own directory\
  - Make the reducers simpler whereever possible\
 	- vel and acc go into physics\
  - handle TODOs\

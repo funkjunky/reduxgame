@@ -5,6 +5,8 @@ import world from './reducers/world.js';
 import entities from './reducers/entities.js';
 import fps from './reducers/fps.js';
 import ups from './reducers/ups.js';
+import score from './reducers/score.js';
+import asteroidSpawn from './reducers/asteroidspawn.js';
 
 const reducers = combineReducers({
     input,
@@ -12,6 +14,15 @@ const reducers = combineReducers({
     entities,
     ups,
     fps,
+    score,
+    asteroidSpawn,
 });
 
-export default reducers;
+const reducersWithReset = (state, action) => {
+    if(action.type === 'reset')
+        state = undefined;
+
+    return reducers(state, action);
+};
+
+export default reducersWithReset;

@@ -1,8 +1,8 @@
 //TODO: put this in an inputs folder
-const mouse = (state = {}, {type, clientX, clientY}) => {
+const mouse = (state = {}, {type, x, y}) => {
     switch(type) {
         case 'mousemove':
-            return {...state, x: clientX, y: clientY};
+            return {...state, x, y};
         default:
             return state;
     }

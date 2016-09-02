@@ -16,11 +16,11 @@ const entities = (state=[], action) => {
             return [...state.filter((value, index) => value.id !== action.id)];
         //The following actions require additional info in their action based on the entity.
         case 'update_rotation':
-            return state.map((entity, index) => entityReducer(entity, {...action, applyRotation: action.entity_id === index, position: entity.position, rotationalVelocity: entity.rotationalVelocity}));
+            return state.map((entity, index) => entityReducer(entity, {...action, applyRotation: action.id === entity.id, position: entity.position, rotationalVelocity: entity.rotationalVelocity}));
         case 'apply_friction':
             return state.map((entity, index) => entityReducer(entity, {...action, friction: (entity.friction !== false) ? entity.friction : action.friction})); //apply entity friction over world friction
         case 'update_acceleration':
-            return state.map((entity, index) => entityReducer(entity, {...action, applyControls: action.entity_id === index}));
+            return state.map((entity, index) => entityReducer(entity, {...action, applyControls: action.id === entity.id}));
         case 'apply_velocity':
             return state.map((entity) => entityReducer(entity, {...action, acceleration: entity.acceleration}));
         case 'apply_position':
