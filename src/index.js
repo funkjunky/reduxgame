@@ -1,9 +1,12 @@
 import { createStore, combineReducers } from 'redux';
 import reducers from './reducers.js';
+import { ship } from './constants/shapes.js';
 import drawEntity from './helpers/drawentity.js';
 import vectorMinus from './helpers/vectorminus.js';
 import getAsteroidPoints from './helpers/getasteroidpoints.js';
 import normalizeVector from './helpers/normalizevector.js';
+import crossFilter from './helpers/crossfilter.js';
+import entitiesIntersect from './helpers/entitiesintersect.js';
 //import getRandomPointNotTouching from './helpers/getrandompointnottouching.js';
 
 //Note: all speeds are pixels per second
@@ -15,16 +18,29 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastUpdateTime = Date.now();
     let lastDrawTime = Date.now();
     const fps = 120;
-    const updateDelay = 10;
+    const updateDelay = 100;
 
+    let players = 0;
     store.dispatch({
         type: 'add_entity',
         defaults: {
+            tags: ['ship', 'player', 'player'+ ++players],
+            //TODO: think of a way that is nicer for ships, asteroids, and bullets a like.
             draw: {
-                shape: 'ship',
+                shape: 'polygon',
+                points: ship.points,
                 size: 20,
             },
             position: {x: 320, y: 320}
+/*
+            onCollision: [{
+                tags: ['asteroid', 'bullet'],
+                action: {
+                    type: 'destroy_entity',
+                    index: store.getState().entities.length,
+                },
+            }],
+*/
         },
     });
     let gameLoop = setInterval(() => {
@@ -48,8 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
         store.dispatch({
             type: 'add_entity',
             defaults: {
+                tags: ['asteroid'],
                 draw: {
-                    shape: 'asteroid',
+                    shape: 'polygon',
                     size: 20 + Math.random() * 5,
                     points: getAsteroidPoints(),
                 },
@@ -62,7 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     y: (Math.random() - 0.5) * 50
                 },
                 friction: 0,
+                lifetime: 0,
                 rotationalVelocity: 0.001 * Math.random(),
+                onCollision: [{
+                    tags: ['bullet', 'ship'],
+                    cb: (asteroid, victim) => store.dispatch({
+                        type: 'destroy_entity',
+                        id: asteroid.id,
+                    }),
+                }],
             },
         });
     }, spawningInterval);
@@ -75,17 +100,29 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.addEventListener('mouseup', ({button}) => store.dispatch({
         type: 'add_entity',
         defaults: {
+            tags: ['bullet'],
             draw: {
                 shape: 'circle',
                 size: 5,
             },
-            position: store.getState().entities[0].position,
+            position: store.getState().entities.find((entity) => entity.tags.indexOf('player1')).position,
             //TODO: should use player's rotation... but vectors are so much nicer... perhaps store player direction as vector instead of radians
             //      perhaps only translate to radians during the ctx.rotate in drawEntity 
             velocity: normalizeVector(vectorMinus(store.getState().input.mouse, store.getState().entities[0].position), 800),
             friction: 0,
+            lifetime: 0,
+            onCollision: [{
+                tags: ['asteroid', 'ship'],
+                cb: (bullet, victim) => store.dispatch({
+                    type: 'destroy_entity',
+                    id: bullet.id,
+                }),
+            }],
         },
     }));
+
+    //TODO: put in its own helper file
+    const intersection = (arr1, arr2) => arr1.filter((value) => arr2.indexOf(value) !== -1);
 
     const update = (dt) => {
         store.dispatch({ type: 'update_acceleration', dt, entity_id: 0, input: store.getState().input });
@@ -95,6 +132,23 @@ document.addEventListener("DOMContentLoaded", () => {
         store.dispatch({ type: 'apply_velocity', dt, terminal: store.getState().world.terminal });
         store.dispatch({ type: 'apply_position', dt });
         store.dispatch({ type: 'add_update', dt });
+        store.dispatch({ type: 'update_lifetime', dt });
+        let canCollide = crossFilter(
+            store.getState().entities,
+            (a, b) =>
+                a.onCollision.some((event) =>
+                    event.tags.some((tag) => b.tags.indexOf(tag) != -1)) //has a matching tag to the collision event
+        );
+        if(canCollide.filter(([a, b]) => entitiesIntersect(a, b)).length > 0) {
+            console.log('did: ', canCollide.filter(([a, b]) => entitiesIntersect(a, b)));
+            //debugger;
+        }
+        canCollide.filter(([a, b]) => entitiesIntersect(a,b))
+            .forEach(
+                ([entityA, entityB]) => {
+                    return store.dispatch(
+                        entityA.onCollision.find((event) => intersection(event.tags, entityB.tags).length > 0).cb(entityA, entityB)
+            )});
     };
 
     //TODO: put into separate file

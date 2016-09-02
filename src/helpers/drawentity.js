@@ -1,5 +1,3 @@
-import { ship } from '../constants/shapes.js';
-
 const drawPolygon = (ctx, points) => {
     ctx.beginPath();
     //move the pen to the first point and remove that point
@@ -19,9 +17,7 @@ const drawEntity = (ctx, entity) => {
     ctx.scale(entity.draw.size, entity.draw.size);
 
     switch(entity.draw.shape) {
-        case 'ship':
-            drawPolygon(ctx, ship.points); break;
-        case 'asteroid':
+        case 'polygon':
             drawPolygon(ctx, entity.draw.points); break;
         case 'circle':
             ctx.moveTo(0, 0); //TODO: figure out how to stop the nonstop polygon, then remove this

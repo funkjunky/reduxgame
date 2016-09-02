@@ -11,6 +11,9 @@ const entities = (state=[], action) => {
     switch(action.type) {
         case 'add_entity':
             return [...state,  entityReducer(action.defaults, action)];
+        //TODO: fade out object or something... not just instantly gone...
+        case 'destroy_entity':
+            return [...state.filter((value, index) => value.id !== action.id)];
         //The following actions require additional info in their action based on the entity.
         case 'update_rotation':
             return state.map((entity, index) => entityReducer(entity, {...action, applyRotation: action.entity_id === index, position: entity.position, rotationalVelocity: entity.rotationalVelocity}));
@@ -27,14 +30,25 @@ const entities = (state=[], action) => {
     }
 }
 
+//TODO: doesn't exactly work as intended. Default is calculated every call...
+const autoIncrementer = () => {
+    let id = 0;
+    return () => id++;
+};
+
+const idAutoIncrementer = autoIncrementer();
 const entityReducer = combineReducers({
     draw: (state = {}) => state,
+    tags: (state = []) => state,
     acceleration,
     velocity,
     position,
     rotation,
     friction: (state = false) => state,
+    lifetime: (state = 0, {type, dt}) => (type === 'update_lifetime') ? state + dt : state,
     rotationalVelocity: (state = false) => state,
+    onCollision: (state = []) => state,
+    id: (state = idAutoIncrementer()) => state,
 });
 
 export default entities;

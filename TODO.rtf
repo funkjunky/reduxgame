@@ -19,17 +19,36 @@
  *- bullet speed should be normalized\
  *- add generating random asteroids [polygons]\
 	*- rotate the asteroids slowly, random speed and direction.\
- - add a margin to left and right, so things don\'92t instantly rotate. Perhaps 20 pixels.\
+ *- add a margin to left and right, so things don\'92t instantly rotate. Perhaps 20 pixels.\
 \
- - add a tagging system or something to grab entities by\'85 so we can use that for controls\'85\
+ *- add a tagging system or something to grab entities by\'85 so we can use that for controls\'85\
 \
  - add collision with bullets and asteroids so they make smaller asteroids that will NOT split after being hit\
+	*- onCollision: \{tags: action:\} [add comments on other entity]\
+	*- check collision function, line intersection checks against all lines and fires action\
+	*- copy line intersection code from SO, then just put the points in ourselves manually.\
+	*- make the reducer for destroy_entity\
+	*- troubleshoot detection code\'85 it seems onCollision.find doesn\'92t exist\'85 so see what is being returned by crossFilter\
+	*- Convert all collision detection to circles. ships and asteroids well use size and pretend to be a circle\
+	*- put back in asteroid code\
+\
+ - simplify reducer structure\
+	- no more draw\
+	- vel and acc go into physics\
+	- size goes in root\
+	- we draw from tags, first we see.\
+	- for asteroids we pre-determine like 10 asteroids and index them. An asteroid gets a random tag \'91asteroid-shape-0\'92 to determine it\'92s shape of lines.	\
+\
+ - make the code for creating asteroid_peice, 4 of them at the 4 squares around the area.\
  - add score to destroying asteroids\
  - add collision with ship for asteroid, reset state except life, which i reduce by 1\
 	- ALSO collision of bullet with ship! same idea!\
 \
  - handle TODOs\
  - add tests\
+ - move most functions into library files, they shouldn\'92t be exported as default. ie. import \{ crossFilter \} from \'91./helpers/array.js\'92\
+\
+ - publish a gh-page demo of game\
 \
  - new gameplay\
 	- add a portal oval entity\
