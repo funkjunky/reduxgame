@@ -6,7 +6,7 @@ const entitiesIntersect =
         if(entityA.lifetime < 300 || entityB.lifetime < 300)
             return false;
         else
-            return dist(entityA.position, entityB.position) <= entityA.draw.size + entityB.draw.size;
+            return dist(entityA.position, entityB.position) <= entityA.size + entityB.size;
     };
 
 export default entitiesIntersect;

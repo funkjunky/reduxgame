@@ -38,8 +38,8 @@ const autoIncrementer = () => {
 
 const idAutoIncrementer = autoIncrementer();
 const entityReducer = combineReducers({
-    draw: (state = {}) => state,
     tags: (state = []) => state,
+    size: (state = false) => state,
     acceleration,
     velocity,
     position,

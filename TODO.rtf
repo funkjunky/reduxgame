@@ -33,17 +33,18 @@
 	*- put back in asteroid code\
 \
  - simplify reducer structure\
-	- no more draw\
-	- vel and acc go into physics\
-	- size goes in root\
-	- we draw from tags, first we see.\
-	- for asteroids we pre-determine like 10 asteroids and index them. An asteroid gets a random tag \'91asteroid-shape-0\'92 to determine it\'92s shape of lines.	\
+	*- no more draw\
+	*- size goes in root\
+	*- we draw from tags, first we see.\
+	*- for asteroids we pre-determine like 10 asteroids and index them. An asteroid gets a random tag \'91asteroid-shape-0\'92 to determine it\'92s shape of lines.	\
 \
  - make the code for creating asteroid_peice, 4 of them at the 4 squares around the area.\
  - add score to destroying asteroids\
  - add collision with ship for asteroid, reset state except life, which i reduce by 1\
 	- ALSO collision of bullet with ship! same idea!\
 \
+ - Make the reducers simpler whereever possible\
+	- vel and acc go into physics\
  - handle TODOs\
  - add tests\
  - move most functions into library files, they shouldn\'92t be exported as default. ie. import \{ crossFilter \} from \'91./helpers/array.js\'92\

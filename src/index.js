@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastUpdateTime = Date.now();
     let lastDrawTime = Date.now();
     const fps = 120;
-    const updateDelay = 100;
+    const updateDelay = 10;
 
     let players = 0;
     store.dispatch({
@@ -26,11 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         defaults: {
             tags: ['ship', 'player', 'player'+ ++players],
             //TODO: think of a way that is nicer for ships, asteroids, and bullets a like.
-            draw: {
-                shape: 'polygon',
-                points: ship.points,
-                size: 20,
-            },
+            size: 20,
             position: {x: 320, y: 320}
 /*
             onCollision: [{
@@ -63,12 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
         store.dispatch({
             type: 'add_entity',
             defaults: {
-                tags: ['asteroid'],
-                draw: {
-                    shape: 'polygon',
-                    size: 20 + Math.random() * 5,
-                    points: getAsteroidPoints(),
-                },
+                tags: ['asteroid', 'asteroid-shape-'+Math.floor(Math.random()*10)],
+                size: 20,
                 position: {
                     x: 20 + Math.random() * (640 - 20),
                     y: 20 + Math.random() * (480 - 20),
@@ -98,10 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         type: 'add_entity',
         defaults: {
             tags: ['bullet'],
-            draw: {
-                shape: 'circle',
-                size: 5,
-            },
+            size: 5,
             position: store.getState().entities.find((entity) => entity.tags.indexOf('player1')).position,
             //TODO: should use player's rotation... but vectors are so much nicer... perhaps store player direction as vector instead of radians
             //      perhaps only translate to radians during the ctx.rotate in drawEntity 
