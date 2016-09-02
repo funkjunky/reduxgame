@@ -60,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //TODO: reduce the spawning interval by x ms every y ms
     const spawningInterval = 5000;
     let newAsteroidLoop = setInterval(() => {
-        //getNewAsteroid(store.getState.entites);
         store.dispatch({
             type: 'add_entity',
             defaults: {
@@ -93,9 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, spawningInterval);
 
     canvas.addEventListener('keydown', ({which}) => (!store.getState().input[which]) ? store.dispatch({type: 'keydown', which}) : null);
-    //canvas.addEventListener('mousedown', ({button}) => (!store.getState().input[button]) ? store.dispatch({type: 'keydown', button}) : null);
     canvas.addEventListener('keyup', ({which}) => store.dispatch({type: 'keyup', which}));
-    //canvas.addEventListener('mouseup', ({button}) => store.dispatch({type: 'keyup', button}));
     canvas.addEventListener('mousemove', ({clientX, clientY}) => store.dispatch({type: 'mousemove', clientX, clientY}));
     canvas.addEventListener('mouseup', ({button}) => store.dispatch({
         type: 'add_entity',
@@ -133,16 +130,16 @@ document.addEventListener("DOMContentLoaded", () => {
         store.dispatch({ type: 'apply_position', dt });
         store.dispatch({ type: 'add_update', dt });
         store.dispatch({ type: 'update_lifetime', dt });
+        handleCollisions();
+    };
+
+    const handleCollisions = () => {
         let canCollide = crossFilter(
             store.getState().entities,
             (a, b) =>
                 a.onCollision.some((event) =>
                     event.tags.some((tag) => b.tags.indexOf(tag) != -1)) //has a matching tag to the collision event
         );
-        if(canCollide.filter(([a, b]) => entitiesIntersect(a, b)).length > 0) {
-            console.log('did: ', canCollide.filter(([a, b]) => entitiesIntersect(a, b)));
-            //debugger;
-        }
         canCollide.filter(([a, b]) => entitiesIntersect(a,b))
             .forEach(
                 ([entityA, entityB]) => {
