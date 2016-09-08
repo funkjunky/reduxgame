@@ -1,4 +1,4 @@
-const score = (state = 0, action) => (action.type == 'add_score')
+const score = (state = 0, action) => (action.type == 'add-score')
     ? state + action.score
     : state;
 

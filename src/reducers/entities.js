@@ -1,32 +1,36 @@
 import acceleration from './physics/acceleration.js';
-import velocity from './physics/velocity.js';
-import position from './physics/position.js';
 import rotation from './rotation.js';
+import handleCollisions from '../helpers/handlecollisions.js';
+import normalizeVector from '../helpers/normalizevector.js';
+import vectorMinus from '../helpers/vectorminus.js';
 
 import { combineReducers } from 'redux';
 
 const entities = (state=[], action) => {
-    //Specialized action info to send to each reducer, depending on what we're reducing [which action type]
-    //TODO: repeated code could be removed I think... state.map is done every time, move code out i think...
     switch(action.type) {
+        case 'add_bullet':
+            //calculate position and velocity based on entity and target
+            const entity = state.find((entity) => entity.tags.indexOf(action.entityTag) !== -1);
+            action.defaults.position = entity.position;
+            action.defaults.velocity = normalizeVector(vectorMinus(action.targetPosition, entity.position), 800);
         case 'add_entity':
             return [...state,  entityReducer(action.defaults, action)];
         //TODO: fade out object or something... not just instantly gone...
         case 'destroy_entity':
-            return [...state.filter((value, index) => value.id !== action.id)];
-        //The following actions require additional info in their action based on the entity.
-        case 'update_rotation':
-            return state.map((entity, index) => entityReducer(entity, {...action, applyRotation: action.id === entity.id, position: entity.position, rotationalVelocity: entity.rotationalVelocity}));
-        case 'apply_friction':
-            return state.map((entity, index) => entityReducer(entity, {...action, friction: (entity.friction !== false) ? entity.friction : action.friction})); //apply entity friction over world friction
-        case 'update_acceleration':
-            return state.map((entity, index) => entityReducer(entity, {...action, applyControls: action.id === entity.id}));
-        case 'apply_velocity':
-            return state.map((entity) => entityReducer(entity, {...action, acceleration: entity.acceleration}));
-        case 'apply_position':
-            return state.map((entity) => entityReducer(entity, {...action, velocity: entity.velocity}));
+            return [...state.filter((value) => value.id !== action.id)];
+
+        //handling collisions, then falling through, for lower level tick reducers
+        case 'tick':
+            handleCollisions(entities, action.QueueAction);
+        //We need to give rotation the entity it needs to calculate the radian rotation.
+        case 'set-rotation-vector-from-entity':
+            action.entity = state.find(action.filter);
+        //we apply a filter if it exists, so we only reducer the entity we intended to reduce.
         default:
-            return state.map((entity) => entityReducer(entity, action));
+            return state.map((entity) => (action.filter && action.filter(entity))
+                ? entityReducer(entity, action)
+                : entity
+            );
     }
 }
 
@@ -36,19 +40,28 @@ const autoIncrementer = () => {
     return () => id++;
 };
 
+const entityTemplate = {
+    get velocity()      { return this.acceleration._velocity; },
+    set velocity(val)   { this.acceleration._velocity = val; },
+    get position()      { return this.acceleration._velocity._position; },
+    set position(val)   { this.acceleration._velocity._position = val; },
+    get rotation()      { return this.rotationalVelocity._rotation; },
+    set rotation(val)   { this.rotationalVelocity._rotation = val; },
+};
 const idAutoIncrementer = autoIncrementer();
-const entityReducer = combineReducers({
-    tags: (state = []) => state,
-    size: (state = false) => state,
-    acceleration,
-    velocity,
-    position,
-    rotation,
-    friction: (state = false) => state,
-    lifetime: (state = 0, {type, dt}) => (type === 'update_lifetime') ? state + dt : state,
-    rotationalVelocity: (state = false) => state,
-    onCollision: (state = []) => state,
-    id: (state = idAutoIncrementer()) => state,
+const entityReducer = (state, action) => ({
+    ...entityTemplate,
+    ...combineReducers({
+        id: (state = idAutoIncrementer()) => state,
+        tags: (state = []) => state,
+        size: (state = false) => state,
+
+        acceleration,
+        rotationalVelocity: (state = false) => ({...state, rotation(state, {...action, rotationalVelocity: { state.x, state.y }})}),
+        lifetime: (state = 0, {type, dt}) => (type === 'tick') ? state + dt : state,
+
+        onCollision: (state = []) => state,
+    })
 });
 
 export default entities;

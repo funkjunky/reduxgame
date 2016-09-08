@@ -2,7 +2,7 @@ import addFrame from '../helpers/addframe.js';
 
 //Updates per second
 const ups = (state = {updates: 0, elapsed: 0, speed: 0}, action) => 
-    (action.type === 'add_update')
+    (action.type === 'tick')
         ? addFrame(state, action)
         : state;
 

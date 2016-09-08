@@ -46,12 +46,47 @@
  *- grab ship for bullets through tags, not 0 index\
  *- asteroid countdown should be in redux store\
 \
- - put entity templates in their own files, in their own directory\
- - Make the reducers simpler whereever possible\
-	- vel and acc go into physics\
- - handle TODOs\
- - add tests\
+ *- put entity templates in their own files, in their own directory\
+ - put update and draw loop into reducers\
+	*- create the reducers\
+	*- remove old update and draw interval code, while ensuring it\'92s all transfered\
+	*- do the same for asteroid spawns\
+		*- write a middleware for queueing up actions to be dispatched after.\
+\
+	*- middleware for steps and interval\
+		*- create middleware that takes interval argument\
+		*- inside, create setInterval, and dispatches the action \'91_tick\'92 every interval with action.dt set\
+		*- add play pause\
+\
+	*- updating input\
+		*- remove exclusives\
+		*- cleaned up\
+\
+	- reorganize acc, vel, and pos all hierarchical under acceleration. \
+		*- put reducers in each other heirarhically\
+			*- acceelration -> velocity -> position\
+			*- rotationalvelocity -> rotation\
+		*- wrap the combine reducers in a way where we add the get properties for velocity and position in entity. and set properties through acceleration\
+		*- clean up excess code and rename things better\'85\
+		*- figure out a nicer way to do all the boilerplate for these new reducer methods.\
+\
+	*- handle tick for other things\'85\
+	*- use new action queue middleware for game logic actions in reducers.\
+	*- move collision code, into library code and asteredux code\
+	*- move all other code into asteredux code as necessary\
+\
+	*- all files should be clean\
+\
+	 *- put action types into a types constant file and actions into /actions/\
+		*- put actions into action files\
+		*- pass QueueAction to onCollision callback\
+		*- put action type names into constants\
+\
+ - test code till it works\
+\
  - move most functions into library files, they shouldn\'92t be exported as default. ie. import \{ crossFilter \} from \'91./helpers/array.js\'92\
+ - add tests\
+ - handle ALL TODOs\
 \
  - publish a gh-page demo of game\
 \
