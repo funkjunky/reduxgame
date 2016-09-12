@@ -8,13 +8,13 @@ const template_asteroid_piece = () => {
     template.velocity.x *= 2;
     template.velocity.y *= 2;
     template.rotationalVelocity.velocity *= 2;
-    template.onCollision.push({
+    template.onCollision = [{
         tags: ['bullet', 'ship'],
         cb: (asteroid, victim, QueueAction) => { 
             QueueAction(destroyEntity(asteroid.id));
             QueueAction(addScore(2));
         },
-    });
+    }];
 
     return template;
 };

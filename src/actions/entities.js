@@ -21,7 +21,7 @@ export const addShip = () => addEntity(template_ship());
 
 export const addAsteroid = () => addEntity(template_asteroid());
 
-export const addAsteroidPiece = () => addEntity(template_asteroid_piece());
+export const addAsteroidPiece = (position, size) => addEntity({...template_asteroid_piece(), position, size});
 
 //Unique, because we don't have access to the entity or the velocity directly.
 export const addBullet = (entityTag, targetPosition) => ({

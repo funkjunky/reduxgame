@@ -28,7 +28,7 @@ const entities = (state=[], action) => {
 
         //handling collisions, then falling through, for lower level tick reducers
         case TICK:
-            handleCollisions(entities, action.QueueAction);
+            handleCollisions(state, action.QueueAction);
             return state.map((entity) => entityReducer(entity, action));
         //We need to give rotation the entity it needs to calculate the radian rotation.
         case ROTATION.SET_FROM_TO:

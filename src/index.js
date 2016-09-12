@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.addEventListener('mouseup', ({button, pageX, pageY}) => handleMouse(store.dispatch, {button, x: pageX - canvas.offsetLeft, y: pageY - canvas.offsetTop }));
 
     //initialize game
-    initGame(store, gameEngine);
+    initGame(store.dispatch);
 
     //start the game
     gameEngine.play();
