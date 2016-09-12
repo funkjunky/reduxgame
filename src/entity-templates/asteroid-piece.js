@@ -7,7 +7,7 @@ const template_asteroid_piece = () => {
     template.tags.push('asteroid-shape-' + Math.floor(Math.random()*10));
     template.velocity.x *= 2;
     template.velocity.y *= 2;
-    template.rotationalVelocity *= 2;
+    template.rotationalVelocity.velocity *= 2;
     template.onCollision.push({
         tags: ['bullet', 'ship'],
         cb: (asteroid, victim, QueueAction) => { 

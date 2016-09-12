@@ -1,5 +1,8 @@
+import drawEntity from '../helpers/drawentity.js';
+
 let oldScore = 0;
 const draw = (state, ctx) => {
+    ctx.clearRect(0, 0, 640, 480);
     state.entities.forEach((entity) => {
         drawEntity(ctx, entity);
     });

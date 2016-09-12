@@ -82,13 +82,27 @@
 		*- pass QueueAction to onCollision callback\
 		*- put action type names into constants\
 \
- - test code till it works\
+ *- test code till it works\
+	*- why am i getting unknown types when moving mouse? [init everytime\'85 moved combineReducer out of call]\
+ 	*- position is being reset as soon as i move the mouse, and I know it isn\'92t being set through the property. SO must be position\
+ 	*- friction, terminal need to be put into velocity, then I need to set them \
+	*- friction isn\'92tbeing applied to bullets\
+	*- keys aren\'92t working properly.\
+	*- pause doesn\'92t work\
+	*- asteroids aren\'92t spawning\
+	*- asteroids arent drifting\
+	*- aim for bullets is off\
 \
  - move most functions into library files, they shouldn\'92t be exported as default. ie. import \{ crossFilter \} from \'91./helpers/array.js\'92\
  - add tests\
  - handle ALL TODOs\
 \
  - publish a gh-page demo of game\
+\
+\'85\
+\
+ - there should be no helpers, move everything into libraries I import through NPM\
+ - separate the engine and the game, make publish the engine as a library we include\
 \
  - new gameplay\
 	- add a portal oval entity\

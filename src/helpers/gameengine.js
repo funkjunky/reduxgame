@@ -1,11 +1,11 @@
-import ReduxInterval from './middlewares/reduxInterval.js';
-import ReduxRaf from './middlewares/reduxRaf.js';
+import ReduxInterval from '../middlewares/reduxinterval.js';
+import ReduxRaf from '../middlewares/reduxraf.js';
 
-const GameEngine = ({ interval, draw }) => {
+const GameEngine = (interval, draw) => {
     let reduxInterval = ReduxInterval(interval);
     let reduxRaf = ReduxRaf(draw);
     let _paused = false;
-    return {
+    let thisObj = {
         play: () => {
             reduxInterval.play();
             reduxRaf.play();
@@ -18,12 +18,13 @@ const GameEngine = ({ interval, draw }) => {
         },
         togglePause: () => {
             if(_paused)
-                this.play();
+                thisObj.play();
             else
-                this.pause();
+                thisObj.pause();
         },
         middlewares: [ reduxInterval.middleware, reduxRaf.middleware ],
     };
+    return thisObj;
 };
 
 export default GameEngine;

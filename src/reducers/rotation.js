@@ -1,9 +1,12 @@
-const rotation = (state = 0, { type, radians, rotationalVelocity, dt }) => {
+import { TICK } from '../middlewares/reduxinterval.js';
+import { ROTATION } from '../constants/actions.js';
+
+const rotation = (state = 0, { type, entity, x, y, rotationalVelocity, dt }) => {
     switch(type) {
-        case 'tick':
+        case TICK:
             return state + (rotationalVelocity * dt);
-        case 'set-rotation-vector-from-entity':
-            return Math.atan2(action.y - action.entity.position.y, action.x - action.entity.position.x);
+        case ROTATION.SET_FROM_TO:
+            return Math.atan2(y - entity.position.y, x - entity.position.x);
         default:
             return state;
     }

@@ -11,11 +11,11 @@ const template_asteroid = () => ({
     },
     velocity: {
         x: (Math.random() - 0.5) * 50,
-        y: (Math.random() - 0.5) * 50
+        y: (Math.random() - 0.5) * 50,
+        friction: 0.000001,
     },
-    friction: 0,
     lifetime: 0,
-    rotationalVelocity: 0.001 - 0.002 * Math.random(),
+    rotationalVelocity: { velocity: 0.001 - 0.002 * Math.random() },
     onCollision: [{
         tags: ['bullet', 'ship'],
         cb: (asteroid, victim, QueueAction) => {

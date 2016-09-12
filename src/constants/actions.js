@@ -12,3 +12,11 @@ export const REDUCER = {
 export const ROTATION = {
     SET_FROM_TO: 'set_rotation_vector_from_entity',
 };
+
+export const ACCELERATION = {
+    SET: 'set_acceleration',
+};
+
+export const ASTEROIDSPAWN = {
+    SET_INTERVAL: 'set_interval',
+};

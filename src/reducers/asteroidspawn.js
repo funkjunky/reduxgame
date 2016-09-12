@@ -1,15 +1,17 @@
-import template_asteroid from './entity-templates/asteroid.js';
+import template_asteroid from '../entity-templates/asteroid.js';
 import { addAsteroid } from '../actions/entities.js';
+import { ASTEROIDSPAWN } from '../constants/actions.js';
+import { TICK } from '../middlewares/reduxinterval.js';
 
-const asteroidSpawn = (state = 0, { type, dt, interval, QueueAction }) => {
+const asteroidSpawn = (state = {dt: 0, interval: 99999}, { type, dt, interval, QueueAction }) => {
     switch(type) {
-        case 'tick':
-            if(state.dt += dt >= state.interval) {
+        case TICK:
+            if((state.dt += dt) >= state.interval) {
                 state.dt = 0;
-                QueueActoin(addAsteroid());
-            } else
-                return { ...state };    //we already incremented dt in the if statement.
-        case 'set-interval':
+                QueueAction(addAsteroid());
+            }
+            return { ...state };    //we already incremented dt in the if statement.
+        case ASTEROIDSPAWN.SET_INTERVAL:
             return {
                 ...state,
                 interval,

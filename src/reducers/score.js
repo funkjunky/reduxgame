@@ -1,4 +1,6 @@
-const score = (state = 0, action) => (action.type == 'add-score')
+import { REDUCER } from '../constants/actions.js';
+
+const score = (state = 0, action) => (action.type == REDUCER.ADD_SCORE)
     ? state + action.score
     : state;
 

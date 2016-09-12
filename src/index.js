@@ -7,6 +7,8 @@ import actionQueue from './middlewares/actionqueue.js';
 import GameEngine from './helpers/gameengine.js';
 import handleKeys from './asteredux/handlekeys.js';
 import handleMouse from './asteredux/handlemouse.js';
+import initGame from './asteredux/initgame.js';
+import draw from './asteredux/draw.js';
 
 //Note: all speeds are pixels per second
 document.addEventListener("DOMContentLoaded", () => {
@@ -23,14 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //events
     canvas.addEventListener('keydown', ({which}) => (which === 32) ? gameEngine.togglePause() : null);
-    canvas.addEventListener('keydown', ({which, keyDown: true }) => handleKeys(store.dispatch, {which})); //note: I need to isolate which, hence the curry
-    canvas.addEventListener('keyup', ({which, keyDown: false }) => handleKeys(store.dispatch, {which})); //note: I need to isolate which, hence the curry
+    canvas.addEventListener('keydown', ({which}) => handleKeys(store.dispatch, {which, keyDown: true}));
+    canvas.addEventListener('keyup', ({which}) => handleKeys(store.dispatch, {which, keyDown: false}));
     canvas.addEventListener('mousemove', ({pageX, pageY}) => handleMouse(store.dispatch, { x: pageX - canvas.offsetLeft, y: pageY - canvas.offsetTop }));
-    canvas.addEventListener('mouseup', (event) => handleMouse(store.dispatch, event));
+    canvas.addEventListener('mouseup', ({button, pageX, pageY}) => handleMouse(store.dispatch, {button, x: pageX - canvas.offsetLeft, y: pageY - canvas.offsetTop }));
 
     //initialize game
     initGame(store, gameEngine);
 
     //start the game
-    reduxInterval.play();
+    gameEngine.play();
 });

@@ -1,10 +1,10 @@
-import crossFilter from './helpers/crossfilter.js';
-import entitiesIntersect from './helpers/entitiesintersect.js';
+import crossFilter from './crossfilter.js';
+import entitiesIntersect from './entitiesintersect.js';
 
 const intersection = (arr1, arr2) => arr1.filter((value) => arr2.indexOf(value) !== -1);
 const handleCollisions = (entities, QueueAction) => {
     let canCollide = crossFilter(
-        store.getState().entities,
+        entities,
         (a, b) =>
             a.onCollision.some((event) =>
                 event.tags.some((tag) => b.tags.indexOf(tag) != -1)) //has a matching tag to the collision event
