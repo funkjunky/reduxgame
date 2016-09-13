@@ -22,7 +22,6 @@ const entities = (state=[], action) => {
             if(action.defaults.position)
                 newEntity.position = action.defaults.position;
             return [...state, newEntity];
-        //TODO: fade out object or something... not just instantly gone...
         case ENTITIES.DESTROY:
             return [...state.filter((value) => value.id !== action.id)];
 

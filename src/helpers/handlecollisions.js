@@ -5,7 +5,7 @@ const intersection = (arr1, arr2) => arr1.filter((value) => arr2.indexOf(value) 
 const handleCollisions = (entities, QueueAction) => {
     let canCollide = crossFilter(
         entities,
-        (a, b) =>
+        (a, b) => a.onCollision &&
             a.onCollision.some((event) =>
                 event.tags.some((tag) => b.tags.indexOf(tag) != -1)) //has a matching tag to the collision event
     );
